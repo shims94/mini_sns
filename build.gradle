@@ -1,7 +1,8 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.2.0'
+	id 'org.springframework.boot' version '2.6.7'
 	id 'io.spring.dependency-management' version '1.1.4'
+	id "com.github.node-gradle.node" version "3.3.0"
 }
 
 group = 'com.mysideproj'
@@ -23,7 +24,7 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+	//implementation 'org.springframework.boot:spring-boot-starter-security' // 시큐리티를 걸면 매 요청마다 체크를함.
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
@@ -35,3 +36,32 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// front_end 프론트엔드 코드를 같이 빌드하기위한 코드작성
+node {
+	nodeModulesDir = file("$projectDir/front-end")
+	version = '18.3.0'
+	download = true
+}
+
+// npm task : 프론트엔드 코드(리액트로 구성) 빌드툴
+task npmBuild(type : NpmTask) {
+	args = ['run', "build"]
+}
+
+// 빌드가 되면 static으로 들어가기때문에 빌드파일 카피 위치지정
+task copyFrontEnd(type: Copy) {
+	from "$projectDir/front-end/static"
+	into 'build/resources/main/static/.'
+}
+
+// 클린시 프론트 코드 삭제
+task cleanFrontEnd(type: Delete) {
+	delete "$projectDir/front-end/static", "$projectDir/front-end/node_modules"
+}
+
+npmBuild.dependsOn npmInstall
+copyFrontEnd.dependsOn npmBuild
+compileJava.dependsOn copyFrontEnd
+
+clean.dependsOn cleanFrontEnd
