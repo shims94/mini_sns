@@ -1,6 +1,6 @@
 package com.mysideproj.sns.service;
 
-import com.mysideproj.sns.controller.repository.UserEntityRepository;
+import com.mysideproj.sns.repository.UserEntityRepository;
 import com.mysideproj.sns.exception.SnsApplicationException;
 import com.mysideproj.sns.fixture.UserEntityFixture;
 import com.mysideproj.sns.model.entity.UserEntity;
