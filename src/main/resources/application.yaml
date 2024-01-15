@@ -1,2 +1,16 @@
 # yaml? properties ??? properties? hierarchy? ??? ??.
 
+
+spring:
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
+spring.datasource:
+  hikari:
+    maximum-pool-size: 4
+    jdbc-url : jdbc:postgresql://localhost:5432/shopping?user=postgres&password=7315
+  driver-class-name: org.postgresql.Driver

@@ -3,6 +3,7 @@ package com.mysideproj.sns.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysideproj.sns.controller.request.UserJoinRequest;
 import com.mysideproj.sns.controller.request.UserLoginRequest;
+import com.mysideproj.sns.exception.ErrorCode;
 import com.mysideproj.sns.exception.SnsApplicationException;
 import com.mysideproj.sns.model.User;
 import com.mysideproj.sns.service.UserService;
@@ -35,7 +36,7 @@ public class UserControllerTest {
 
     // 회원가입 테스트 코드
     @Test
-    public void join() throws Exception {
+    public void 회원가입() throws Exception {
         String userName = "userName";
         String password = "password";
 
@@ -52,11 +53,11 @@ public class UserControllerTest {
 
     // 이미 회원가입된 userName(중복)으로 에러반환 테스트코드
     @Test
-    public void join_error_isExist() throws Exception {
+    public void 회원가입시_이미가입된_userName으로_회원가입_하는_경우_에러반환() throws Exception {
         String userName = "userName";
         String password = "password";
 
-        when(userService.join(userName, password)).thenThrow(new SnsApplicationException());
+        when(userService.join(userName, password)).thenThrow(new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME, ""));
 
         mockMvc.perform(post("/api/v1/users/join")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -104,7 +105,7 @@ public class UserControllerTest {
         String userName = "userName";
         String password = "password";
 
-        when(userService.login(userName, password)).thenThrow(new SnsApplicationException());
+        when(userService.login(userName, password)).thenThrow(new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME,""));
 
         mockMvc.perform(post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
