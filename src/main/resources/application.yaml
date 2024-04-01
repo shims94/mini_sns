@@ -14,3 +14,9 @@ spring.datasource:
     maximum-pool-size: 4
     jdbc-url : jdbc:postgresql://localhost:5432/shopping?user=postgres&password=7315
   driver-class-name: org.postgresql.Driver
+
+
+jwt:
+  secret-key: jaeho_sns_mini_project_application_202401_secret_key
+  token:
+    expired-times-ms: 2592000000

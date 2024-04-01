@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
@@ -25,6 +26,9 @@ public class UserServiceTest {
     @MockBean
     private UserEntityRepository userEntityRepository;
 
+    @MockBean
+    private BCryptPasswordEncoder encoder;
+
     
     // 회원가입 정상동작 테스트
     @Test
@@ -34,8 +38,11 @@ public class UserServiceTest {
 
         // mocking 회원가입이 된적이 없기때문에 Optional.empty 반환해야함(userName 으로 DB 에서 찾으면 당연히 없어야함)
         when(userEntityRepository.findByUserName(userName)).thenReturn(Optional.empty());
+
+        when(encoder.encode(password)).thenReturn("encrypt_password");
+
         // save(저장된 entity 반환)시 userEntity 타입의 목킹을 Optional 로 리턴
-        when(userEntityRepository.save(any())).thenReturn(Optional.of(UserEntityFixture.get(userName,password)));
+        when(userEntityRepository.save(any())).thenReturn(UserEntityFixture.get(userName,password));
 
         Assertions.assertDoesNotThrow(() -> userService.join(userName, password));
     }
@@ -50,6 +57,7 @@ public class UserServiceTest {
 
         // mocking
         when(userEntityRepository.findByUserName(userName)).thenReturn(Optional.of(fixture));
+        when(encoder.encode(password)).thenReturn("encrypt_password");
         //
         when(userEntityRepository.save(any())).thenReturn(Optional.of(fixture));
 
@@ -67,6 +75,7 @@ public class UserServiceTest {
 
         // mocking
         when(userEntityRepository.findByUserName(userName)).thenReturn(Optional.of(fixture));
+        when(encoder.matches(password, fixture.getPassword())).thenReturn(true);
 
         // 정상 동작시에는 DoesNotThrow, 에러가 나면 안되기때문
         Assertions.assertDoesNotThrow(() -> userService.login(userName, password));

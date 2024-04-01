@@ -34,9 +34,10 @@ public class UserControllerTest {
     @MockBean
     private UserService userService;
 
+
     // 회원가입 테스트 코드
     @Test
-    public void 회원가입() throws Exception {
+    public void joinTest() throws Exception {
         String userName = "userName";
         String password = "password";
 
@@ -53,11 +54,11 @@ public class UserControllerTest {
 
     // 이미 회원가입된 userName(중복)으로 에러반환 테스트코드
     @Test
-    public void 회원가입시_이미가입된_userName으로_회원가입_하는_경우_에러반환() throws Exception {
+    public void 회원가입시_이미가입된_이름으로_회원가입_하는_경우_에러반환() throws Exception {
         String userName = "userName";
         String password = "password";
 
-        when(userService.join(userName, password)).thenThrow(new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME, ""));
+        when(userService.join(userName, password)).thenThrow(new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME));
 
         mockMvc.perform(post("/api/v1/users/join")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -90,7 +91,7 @@ public class UserControllerTest {
         String userName = "userName";
         String password = "password";
 
-        when(userService.login(userName, password)).thenThrow(new SnsApplicationException());
+        when(userService.login(userName, password)).thenThrow(new SnsApplicationException(ErrorCode.USER_NOT_FOUND));
 
         mockMvc.perform(post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -105,7 +106,7 @@ public class UserControllerTest {
         String userName = "userName";
         String password = "password";
 
-        when(userService.login(userName, password)).thenThrow(new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME,""));
+        when(userService.login(userName, password)).thenThrow(new SnsApplicationException(ErrorCode.INVALID_PASSWORD));
 
         mockMvc.perform(post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
