@@ -7,13 +7,16 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-
+    defer-datasource-initialization: true
 
 spring.datasource:
   hikari:
     maximum-pool-size: 4
-    jdbc-url : jdbc:postgresql://localhost:5432/shopping?user=postgres&password=7315
-  driver-class-name: org.postgresql.Driver
+    jdbc-url: jdbc:postgresql://localhost:5432/shopping?user=postgres&password=7315
+    username: postgres
+    password: 7315
+    driver-class-name: org.postgresql.Driver
+
 
 
 jwt:

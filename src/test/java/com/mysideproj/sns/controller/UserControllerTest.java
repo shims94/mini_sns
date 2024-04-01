@@ -37,16 +37,14 @@ public class UserControllerTest {
 
     // 회원가입 테스트 코드
     @Test
-    public void joinTest() throws Exception {
+    public void 회원가입() throws Exception {
         String userName = "userName";
         String password = "password";
 
-        // TODO : mocking
         when(userService.join(userName, password)).thenReturn(mock(User.class));
 
         mockMvc.perform(post("/api/v1/users/join")
                         .contentType(MediaType.APPLICATION_JSON)
-                        //Todo : add request body
                         .content(objectMapper.writeValueAsBytes(new UserJoinRequest(userName, password)))
                 ).andDo(print())
                 .andExpect(status().isOk());
@@ -87,7 +85,7 @@ public class UserControllerTest {
 
     // 로그인 에러 (회원가입이 안된 아이디) 테스트 코드
     @Test
-    public void login_error_notMember() throws Exception {
+    public void 로그인시_회원가입이_안된_username_입력할경우_에러반환() throws Exception {
         String userName = "userName";
         String password = "password";
 
@@ -102,7 +100,7 @@ public class UserControllerTest {
 
     // 로그인 에러 (패스워드 틀림) 테스트 코드
     @Test
-    public void login_error_incorrectPassword() throws Exception {
+    public void 로그인시_틀린_password_입력시_에러반환() throws Exception {
         String userName = "userName";
         String password = "password";
 
